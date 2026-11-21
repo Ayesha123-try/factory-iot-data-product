@@ -1,0 +1,136 @@
+version: 2
+
+models:
+  - name: slv_sensor_readings
+    description: >
+      Cleaned, typed and enriched sensor readings. One row per reading. Adds physics-based
+      features (temperature delta, mechanical power, overstrain), a tool wear band, a
+      failure_class that surfaces label inconsistencies, and rule checks that recompute the
+      documented HDF / PWF / OSF conditions from the raw sensors.
+    config:
+      meta:
+        layer: silver
+        owner: data-engineering
+    columns:
+      - name: reading_id
+        description: Unique reading identifier (from UDI).
+        data_tests: [unique, not_null]
+      - name: product_id
+        description: Machine / product identifier, upper-cased and trimmed.
+        data_tests: [not_null]
+      - name: product_type_code
+        description: Product quality variant (L = low, M = medium, H = high).
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["L", "M", "H"]
+          - relationships:
+              arguments:
+                to: ref('ref_product_types')
+                field: product_type_code
+      - name: product_serial_number
+        description: Numeric part of product_id.
+        data_tests: [not_null]
+      - name: air_temp_k
+        description: Air temperature in Kelvin.
+        data_tests:
+          - accepted_range:
+              arguments:
+                min_value: 290
+                max_value: 310
+      - name: process_temp_k
+        description: Process temperature in Kelvin.
+        data_tests:
+          - accepted_range:
+              arguments:
+                min_value: 300
+                max_value: 320
+      - name: air_temp_c
+        description: Air temperature in degrees Celsius.
+      - name: process_temp_c
+        description: Process temperature in degrees Celsius.
+      - name: temp_diff_k
+        description: Process temperature minus air temperature (K). Low values mean poor heat dissipation.
+        data_tests:
+          - accepted_range:
+              arguments:
+                min_value: 0
+      - name: rotational_speed_rpm
+        description: Rotational speed (rpm).
+        data_tests:
+          - accepted_range:
+              arguments:
+                min_value: 1000
+                max_value: 3000
+      - name: torque_nm
+        description: Torque (Nm).
+        data_tests:
+          - accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+      - name: power_w
+        description: Mechanical power in watts = torque x rotational speed x 2 pi / 60.
+      - name: tool_wear_min
+        description: Tool wear in minutes.
+        data_tests:
+          - accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 300
+      - name: overstrain_min_nm
+        description: Tool wear x torque (min.Nm), the overstrain indicator.
+      - name: tool_wear_band
+        description: 50-minute tool wear bucket used for risk reporting.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["000-049 min", "050-099 min", "100-149 min", "150-199 min", "200+ min"]
+      - name: is_machine_failure
+        description: True if the machine failed on this reading.
+        data_tests: [not_null]
+      - name: failure_mode_count
+        description: Number of failure mode flags set on this reading (0-5).
+      - name: failure_class
+        description: >
+          no_failure, single_mode_failure, multi_mode_failure, failure_without_mode (failure with
+          no mode label) or mode_without_failure (mode flag set but no failure).
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["no_failure", "single_mode_failure", "multi_mode_failure",
+                         "failure_without_mode", "mode_without_failure"]
+      - name: hdf_rule_triggered
+        description: True if temp_diff_k < 8.6 and rotational_speed_rpm < 1380.
+      - name: pwf_rule_triggered
+        description: True if power_w < 3500 or power_w > 9000.
+      - name: osf_rule_triggered
+        description: True if overstrain_min_nm exceeds the product type threshold.
+
+  - name: slv_failure_events
+    description: >
+      Long (unpivoted) list of failure events. One row per failed reading x failure mode.
+      Failed readings without any mode flag get failure_mode_code = 'UNK'.
+    config:
+      meta:
+        layer: silver
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: ["reading_id", "failure_mode_code"]
+    columns:
+      - name: reading_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv_sensor_readings')
+                field: reading_id
+      - name: failure_mode_code
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('ref_failure_modes')
+                field: failure_mode_code

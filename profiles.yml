@@ -1,0 +1,14 @@
+# dbt connection profile. Kept inside the repo so the project runs anywhere
+# (locally and in GitHub Actions) with DBT_PROFILES_DIR pointing at this folder.
+# DuckDB is an embedded database: the "warehouse" is just a file on disk.
+factory_iot:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "{{ env_var('DBT_DUCKDB_PATH', 'warehouse/factory_iot.duckdb') }}"
+      threads: 4
+    ci:
+      type: duckdb
+      path: "warehouse/ci.duckdb"
+      threads: 4

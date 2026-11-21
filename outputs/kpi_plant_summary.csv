@@ -1,0 +1,2 @@
+total_readings,total_machines,total_failures,failure_rate_pct,multi_mode_failures,failures_without_mode,modes_without_failure,avg_tool_wear_min,top_failure_mode,highest_risk_product_type
+10000,10000,339,3.39,24,9,18,108.0,HDF,L

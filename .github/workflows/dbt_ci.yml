@@ -1,0 +1,63 @@
+name: dbt CI
+
+# Runs the whole data product from scratch on every pull request (and on pushes to main):
+# install -> parse -> build (seeds + models + tests) -> export KPIs -> docs.
+# A failing data test fails the check, so a PR that breaks a KPI cannot be merged unnoticed.
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: dbt-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dbt-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DBT_PROFILES_DIR: ${{ github.workspace }}
+      DBT_TARGET: ci
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dbt + DuckDB
+        run: pip install -r requirements.txt
+
+      - name: Check connection (dbt debug)
+        run: dbt debug --target $DBT_TARGET
+
+      - name: Parse project (catches YAML / Jinja errors fast)
+        run: dbt parse --target $DBT_TARGET
+
+      - name: Build seeds, models and run all data tests
+        run: dbt build --target $DBT_TARGET
+
+      - name: Export gold KPIs
+        run: python scripts/export_outputs.py --db warehouse/ci.duckdb
+
+      - name: Generate documentation site
+        run: dbt docs generate --target $DBT_TARGET
+
+      - name: Upload dbt artifacts and KPI outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dbt-ci-results
+          path: |
+            target/run_results.json
+            target/manifest.json
+            target/catalog.json
+            target/index.html
+            outputs/
+          if-no-files-found: warn

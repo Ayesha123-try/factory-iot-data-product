@@ -1,0 +1,19 @@
+product_type_code,failure_mode_code,failure_mode_name,readings,failure_events,events_per_1000_readings,share_of_type_events_pct
+H,HDF,Heat dissipation failure,1003,8,7.98,34.78
+H,OSF,Overstrain failure,1003,2,1.99,8.7
+H,PWF,Power failure,1003,5,4.99,21.74
+H,RNF,Random failure,1003,0,0.0,0.0
+H,TWF,Tool wear failure,1003,7,6.98,30.43
+H,UNK,Unlabelled failure,1003,1,1.0,4.35
+L,HDF,Heat dissipation failure,6000,76,12.67,30.16
+L,OSF,Overstrain failure,6000,87,14.5,34.52
+L,PWF,Power failure,6000,59,9.83,23.41
+L,RNF,Random failure,6000,1,0.17,0.4
+L,TWF,Tool wear failure,6000,25,4.17,9.92
+L,UNK,Unlabelled failure,6000,4,0.67,1.59
+M,HDF,Heat dissipation failure,2997,31,10.34,34.83
+M,OSF,Overstrain failure,2997,9,3.0,10.11
+M,PWF,Power failure,2997,31,10.34,34.83
+M,RNF,Random failure,2997,0,0.0,0.0
+M,TWF,Tool wear failure,2997,14,4.67,15.73
+M,UNK,Unlabelled failure,2997,4,1.33,4.49

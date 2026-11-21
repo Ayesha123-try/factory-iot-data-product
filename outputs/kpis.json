@@ -1,0 +1,364 @@
+{
+  "generated_at": "2026-11-20T12:53:12+00:00",
+  "kpi_plant_summary": [
+    {
+      "total_readings": 10000,
+      "total_machines": 10000,
+      "total_failures": 339,
+      "failure_rate_pct": 3.39,
+      "multi_mode_failures": 24,
+      "failures_without_mode": 9,
+      "modes_without_failure": 18,
+      "avg_tool_wear_min": 108.0,
+      "top_failure_mode": "HDF",
+      "highest_risk_product_type": "L"
+    }
+  ],
+  "kpi_failure_rate_by_product_type": [
+    {
+      "product_type_code": "L",
+      "quality_variant": "Low",
+      "readings": 6000,
+      "failures": 235,
+      "failure_rate_pct": 3.92,
+      "share_of_failures_pct": 69.32,
+      "share_of_readings_pct": 60.0,
+      "avg_tool_wear_min": 108.4,
+      "avg_torque_nm": 40.0,
+      "avg_rotational_speed_rpm": 1539.0,
+      "avg_power_kw": 6.28
+    },
+    {
+      "product_type_code": "M",
+      "quality_variant": "Medium",
+      "readings": 2997,
+      "failures": 83,
+      "failure_rate_pct": 2.77,
+      "share_of_failures_pct": 24.48,
+      "share_of_readings_pct": 29.97,
+      "avg_tool_wear_min": 107.3,
+      "avg_torque_nm": 40.02,
+      "avg_rotational_speed_rpm": 1538.0,
+      "avg_power_kw": 6.28
+    },
+    {
+      "product_type_code": "H",
+      "quality_variant": "High",
+      "readings": 1003,
+      "failures": 21,
+      "failure_rate_pct": 2.09,
+      "share_of_failures_pct": 6.19,
+      "share_of_readings_pct": 10.03,
+      "avg_tool_wear_min": 107.4,
+      "avg_torque_nm": 39.84,
+      "avg_rotational_speed_rpm": 1538.0,
+      "avg_power_kw": 6.26
+    }
+  ],
+  "kpi_failure_mode_by_product_type": [
+    {
+      "product_type_code": "H",
+      "failure_mode_code": "HDF",
+      "failure_mode_name": "Heat dissipation failure",
+      "readings": 1003,
+      "failure_events": 8,
+      "events_per_1000_readings": 7.98,
+      "share_of_type_events_pct": 34.78
+    },
+    {
+      "product_type_code": "H",
+      "failure_mode_code": "OSF",
+      "failure_mode_name": "Overstrain failure",
+      "readings": 1003,
+      "failure_events": 2,
+      "events_per_1000_readings": 1.99,
+      "share_of_type_events_pct": 8.7
+    },
+    {
+      "product_type_code": "H",
+      "failure_mode_code": "PWF",
+      "failure_mode_name": "Power failure",
+      "readings": 1003,
+      "failure_events": 5,
+      "events_per_1000_readings": 4.99,
+      "share_of_type_events_pct": 21.74
+    },
+    {
+      "product_type_code": "H",
+      "failure_mode_code": "RNF",
+      "failure_mode_name": "Random failure",
+      "readings": 1003,
+      "failure_events": 0,
+      "events_per_1000_readings": 0.0,
+      "share_of_type_events_pct": 0.0
+    },
+    {
+      "product_type_code": "H",
+      "failure_mode_code": "TWF",
+      "failure_mode_name": "Tool wear failure",
+      "readings": 1003,
+      "failure_events": 7,
+      "events_per_1000_readings": 6.98,
+      "share_of_type_events_pct": 30.43
+    },
+    {
+      "product_type_code": "H",
+      "failure_mode_code": "UNK",
+      "failure_mode_name": "Unlabelled failure",
+      "readings": 1003,
+      "failure_events": 1,
+      "events_per_1000_readings": 1.0,
+      "share_of_type_events_pct": 4.35
+    },
+    {
+      "product_type_code": "L",
+      "failure_mode_code": "HDF",
+      "failure_mode_name": "Heat dissipation failure",
+      "readings": 6000,
+      "failure_events": 76,
+      "events_per_1000_readings": 12.67,
+      "share_of_type_events_pct": 30.16
+    },
+    {
+      "product_type_code": "L",
+      "failure_mode_code": "OSF",
+      "failure_mode_name": "Overstrain failure",
+      "readings": 6000,
+      "failure_events": 87,
+      "events_per_1000_readings": 14.5,
+      "share_of_type_events_pct": 34.52
+    },
+    {
+      "product_type_code": "L",
+      "failure_mode_code": "PWF",
+      "failure_mode_name": "Power failure",
+      "readings": 6000,
+      "failure_events": 59,
+      "events_per_1000_readings": 9.83,
+      "share_of_type_events_pct": 23.41
+    },
+    {
+      "product_type_code": "L",
+      "failure_mode_code": "RNF",
+      "failure_mode_name": "Random failure",
+      "readings": 6000,
+      "failure_events": 1,
+      "events_per_1000_readings": 0.17,
+      "share_of_type_events_pct": 0.4
+    },
+    {
+      "product_type_code": "L",
+      "failure_mode_code": "TWF",
+      "failure_mode_name": "Tool wear failure",
+      "readings": 6000,
+      "failure_events": 25,
+      "events_per_1000_readings": 4.17,
+      "share_of_type_events_pct": 9.92
+    },
+    {
+      "product_type_code": "L",
+      "failure_mode_code": "UNK",
+      "failure_mode_name": "Unlabelled failure",
+      "readings": 6000,
+      "failure_events": 4,
+      "events_per_1000_readings": 0.67,
+      "share_of_type_events_pct": 1.59
+    },
+    {
+      "product_type_code": "M",
+      "failure_mode_code": "HDF",
+      "failure_mode_name": "Heat dissipation failure",
+      "readings": 2997,
+      "failure_events": 31,
+      "events_per_1000_readings": 10.34,
+      "share_of_type_events_pct": 34.83
+    },
+    {
+      "product_type_code": "M",
+      "failure_mode_code": "OSF",
+      "failure_mode_name": "Overstrain failure",
+      "readings": 2997,
+      "failure_events": 9,
+      "events_per_1000_readings": 3.0,
+      "share_of_type_events_pct": 10.11
+    },
+    {
+      "product_type_code": "M",
+      "failure_mode_code": "PWF",
+      "failure_mode_name": "Power failure",
+      "readings": 2997,
+      "failure_events": 31,
+      "events_per_1000_readings": 10.34,
+      "share_of_type_events_pct": 34.83
+    },
+    {
+      "product_type_code": "M",
+      "failure_mode_code": "RNF",
+      "failure_mode_name": "Random failure",
+      "readings": 2997,
+      "failure_events": 0,
+      "events_per_1000_readings": 0.0,
+      "share_of_type_events_pct": 0.0
+    },
+    {
+      "product_type_code": "M",
+      "failure_mode_code": "TWF",
+      "failure_mode_name": "Tool wear failure",
+      "readings": 2997,
+      "failure_events": 14,
+      "events_per_1000_readings": 4.67,
+      "share_of_type_events_pct": 15.73
+    },
+    {
+      "product_type_code": "M",
+      "failure_mode_code": "UNK",
+      "failure_mode_name": "Unlabelled failure",
+      "readings": 2997,
+      "failure_events": 4,
+      "events_per_1000_readings": 1.33,
+      "share_of_type_events_pct": 4.49
+    }
+  ],
+  "kpi_failure_rate_by_tool_wear": [
+    {
+      "tool_wear_band": "000-049 min",
+      "readings": 2349,
+      "failures": 52,
+      "failure_rate_pct": 2.21,
+      "avg_torque_nm": 39.79
+    },
+    {
+      "tool_wear_band": "050-099 min",
+      "readings": 2271,
+      "failures": 51,
+      "failure_rate_pct": 2.25,
+      "avg_torque_nm": 40.34
+    },
+    {
+      "tool_wear_band": "100-149 min",
+      "readings": 2290,
+      "failures": 52,
+      "failure_rate_pct": 2.27,
+      "avg_torque_nm": 39.91
+    },
+    {
+      "tool_wear_band": "150-199 min",
+      "readings": 2289,
+      "failures": 61,
+      "failure_rate_pct": 2.66,
+      "avg_torque_nm": 39.99
+    },
+    {
+      "tool_wear_band": "200+ min",
+      "readings": 801,
+      "failures": 123,
+      "failure_rate_pct": 15.36,
+      "avg_torque_nm": 39.8
+    }
+  ],
+  "layer_row_counts": [
+    {
+      "schema": "raw",
+      "table": "ai4i2020",
+      "rows": 10000
+    },
+    {
+      "schema": "bronze",
+      "table": "brz_sensor_readings",
+      "rows": 10000
+    },
+    {
+      "schema": "silver",
+      "table": "slv_sensor_readings",
+      "rows": 10000
+    },
+    {
+      "schema": "silver",
+      "table": "slv_failure_events",
+      "rows": 364
+    },
+    {
+      "schema": "gold",
+      "table": "dim_machine",
+      "rows": 10000
+    },
+    {
+      "schema": "gold",
+      "table": "dim_product_type",
+      "rows": 3
+    },
+    {
+      "schema": "gold",
+      "table": "dim_failure_mode",
+      "rows": 6
+    },
+    {
+      "schema": "gold",
+      "table": "fct_sensor_readings",
+      "rows": 10000
+    },
+    {
+      "schema": "gold",
+      "table": "fct_failure_events",
+      "rows": 364
+    }
+  ],
+  "data_quality": {
+    "failure_class_counts": [
+      {
+        "failure_class": "no_failure",
+        "readings": 9643
+      },
+      {
+        "failure_class": "single_mode_failure",
+        "readings": 306
+      },
+      {
+        "failure_class": "multi_mode_failure",
+        "readings": 24
+      },
+      {
+        "failure_class": "mode_without_failure",
+        "readings": 18
+      },
+      {
+        "failure_class": "failure_without_mode",
+        "readings": 9
+      }
+    ],
+    "rule_vs_label_mismatches": [
+      {
+        "mode": "HDF",
+        "mismatches": 12,
+        "labelled": 115
+      },
+      {
+        "mode": "PWF",
+        "mismatches": 0,
+        "labelled": 95
+      },
+      {
+        "mode": "OSF",
+        "mismatches": 0,
+        "labelled": 98
+      }
+    ]
+  },
+  "dbt": {
+    "tests_total": 76,
+    "tests_pass": 74,
+    "tests_warn": 2,
+    "tests_fail": 0,
+    "models_built": 12,
+    "warnings": [
+      {
+        "test": "dq_failure_label_consistency",
+        "rows": 27
+      },
+      {
+        "test": "dq_failure_rules_match_labels",
+        "rows": 12
+      }
+    ]
+  }
+}

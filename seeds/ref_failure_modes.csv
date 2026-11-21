@@ -1,0 +1,7 @@
+failure_mode_code,failure_mode_name,failure_mode_category,trigger_rule
+TWF,Tool wear failure,Wear,Tool is replaced or fails at a random tool wear between 200 and 240 minutes
+HDF,Heat dissipation failure,Thermal,Process minus air temperature below 8.6 K and rotational speed below 1380 rpm
+PWF,Power failure,Electrical,Mechanical power (torque x angular speed) below 3500 W or above 9000 W
+OSF,Overstrain failure,Mechanical,Tool wear x torque above 11000 (L) / 12000 (M) / 13000 (H) min.Nm
+RNF,Random failure,Random,Process fails with 0.1% probability regardless of sensor values
+UNK,Unlabelled failure,Unknown,Machine failure flag is set but no failure mode flag is set (data quality gap)

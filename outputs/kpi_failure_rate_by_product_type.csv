@@ -1,0 +1,4 @@
+product_type_code,quality_variant,readings,failures,failure_rate_pct,share_of_failures_pct,share_of_readings_pct,avg_tool_wear_min,avg_torque_nm,avg_rotational_speed_rpm,avg_power_kw
+L,Low,6000,235,3.92,69.32,60.0,108.4,40.0,1539.0,6.28
+M,Medium,2997,83,2.77,24.48,29.97,107.3,40.02,1538.0,6.28
+H,High,1003,21,2.09,6.19,10.03,107.4,39.84,1538.0,6.26

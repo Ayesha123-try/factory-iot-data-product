@@ -1,0 +1,6 @@
+tool_wear_band,readings,failures,failure_rate_pct,avg_torque_nm
+000-049 min,2349,52,2.21,39.79
+050-099 min,2271,51,2.25,40.34
+100-149 min,2290,52,2.27,39.91
+150-199 min,2289,61,2.66,39.99
+200+ min,801,123,15.36,39.8

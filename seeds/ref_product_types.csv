@@ -1,0 +1,4 @@
+product_type_code,quality_variant,documented_population_share_pct,tool_wear_increment_min,overstrain_threshold_min_nm
+L,Low,50,2,11000
+M,Medium,30,3,12000
+H,High,20,5,13000

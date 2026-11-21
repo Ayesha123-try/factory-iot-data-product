@@ -1,0 +1,52 @@
+version: 2
+
+models:
+  - name: brz_sensor_readings
+    description: >
+      Bronze copy of the raw AI4I 2020 readings. One row per raw CSV row, with columns renamed
+      to snake_case and lineage metadata added. No rows are filtered or changed.
+    config:
+      meta:
+        layer: bronze
+        owner: data-engineering
+    columns:
+      - name: udi
+        description: Raw unique identifier of the reading.
+        data_tests: [unique, not_null]
+      - name: product_id
+        description: Raw product / machine identifier, e.g. M14860 (type letter + serial number).
+        data_tests: [not_null]
+      - name: product_type
+        description: Raw product quality variant letter (L, M or H).
+        data_tests: [not_null]
+      - name: air_temperature_k
+        description: Air temperature in Kelvin.
+      - name: process_temperature_k
+        description: Process temperature in Kelvin.
+      - name: rotational_speed_rpm
+        description: Spindle rotational speed in revolutions per minute.
+      - name: torque_nm
+        description: Torque in Newton metres.
+      - name: tool_wear_min
+        description: Minutes of tool use so far.
+      - name: machine_failure
+        description: 1 if the machine failed during this reading, else 0.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+                quote: false
+      - name: twf
+        description: Tool wear failure flag (0/1).
+      - name: hdf
+        description: Heat dissipation failure flag (0/1).
+      - name: pwf
+        description: Power failure flag (0/1).
+      - name: osf
+        description: Overstrain failure flag (0/1).
+      - name: rnf
+        description: Random failure flag (0/1).
+      - name: _source_file
+        description: File the row was loaded from.
+      - name: _ingested_at
+        description: Timestamp when the row was loaded into bronze.

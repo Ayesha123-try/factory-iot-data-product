@@ -1,0 +1,63 @@
+name: factory_iot
+version: "1.0.0"
+config-version: 2
+
+# Which profile in profiles.yml to use (the profile lives in this repo, see README).
+profile: factory_iot
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+analysis-paths: ["analyses"]
+
+target-path: "target"
+clean-targets: ["target", "dbt_packages", "logs"]
+
+# ---------------------------------------------------------------------------
+# Seeds = the "landing zone". The raw UCI CSV plus two small reference tables.
+# ---------------------------------------------------------------------------
+seeds:
+  factory_iot:
+    +schema: raw
+    ai4i2020:
+      +quote_columns: true
+      +column_types:
+        "UDI": integer
+        "Product ID": varchar
+        "Type": varchar
+        "Air temperature [K]": double
+        "Process temperature [K]": double
+        "Rotational speed [rpm]": integer
+        "Torque [Nm]": double
+        "Tool wear [min]": integer
+        "Machine failure": integer
+        "TWF": integer
+        "HDF": integer
+        "PWF": integer
+        "OSF": integer
+        "RNF": integer
+
+# ---------------------------------------------------------------------------
+# Medallion layers. Each layer gets its own DuckDB schema.
+# ---------------------------------------------------------------------------
+models:
+  factory_iot:
+    bronze:
+      +schema: bronze
+      +materialized: table
+      +tags: ["bronze"]
+    silver:
+      +schema: silver
+      +materialized: table
+      +tags: ["silver"]
+    gold:
+      +schema: gold
+      +materialized: table
+      +tags: ["gold"]
+      kpis:
+        +tags: ["gold", "kpi"]
+
+tests:
+  factory_iot:
+    +store_failures: false

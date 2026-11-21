@@ -1,0 +1,227 @@
+version: 2
+
+models:
+  # ---------------------------------------------------------------- dimensions
+  - name: dim_product_type
+    description: Product quality variant dimension (L / M / H). One row per product type.
+    config:
+      meta: {layer: gold, model_type: dimension}
+    columns:
+      - name: product_type_key
+        description: Surrogate key (MD5 of product_type_code).
+        data_tests: [unique, not_null]
+      - name: product_type_code
+        description: L, M or H.
+        data_tests: [unique, not_null]
+      - name: quality_variant
+        description: Low, Medium or High.
+      - name: documented_population_share_pct
+        description: Share of the population the dataset documentation states for this variant (50/30/20). The actual data is 60/30/10 - see share_of_readings_pct in the KPI.
+      - name: tool_wear_increment_min
+        description: Minutes of tool wear the variant adds per process.
+      - name: overstrain_threshold_min_nm
+        description: Overstrain (tool wear x torque) limit above which OSF occurs.
+
+  - name: dim_failure_mode
+    description: Failure mode dimension. One row per failure mode including UNK (unlabelled).
+    config:
+      meta: {layer: gold, model_type: dimension}
+    columns:
+      - name: failure_mode_key
+        description: Surrogate key (MD5 of failure_mode_code).
+        data_tests: [unique, not_null]
+      - name: failure_mode_code
+        data_tests:
+          - unique
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["TWF", "HDF", "PWF", "OSF", "RNF", "UNK"]
+      - name: failure_mode_name
+      - name: failure_mode_category
+      - name: trigger_rule
+        description: Plain-English rule from the dataset paper that triggers this mode.
+
+  - name: dim_machine
+    description: Machine dimension. One row per product_id (machine / product unit).
+    config:
+      meta: {layer: gold, model_type: dimension}
+    columns:
+      - name: machine_key
+        description: Surrogate key (MD5 of product_id).
+        data_tests: [unique, not_null]
+      - name: product_id
+        data_tests: [unique, not_null]
+      - name: product_serial_number
+      - name: product_type_code
+      - name: product_type_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_product_type')
+                field: product_type_key
+      - name: quality_variant
+
+  # ---------------------------------------------------------------- facts
+  - name: fct_sensor_readings
+    description: >
+      Central fact table of the star schema. One row per sensor reading, with foreign keys to
+      dim_machine and dim_product_type, sensor measures and the failure outcome.
+    config:
+      meta: {layer: gold, model_type: fact, grain: one row per reading}
+    columns:
+      - name: reading_id
+        description: Degenerate dimension - unique reading identifier.
+        data_tests: [unique, not_null]
+      - name: machine_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_machine')
+                field: machine_key
+      - name: product_type_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_product_type')
+                field: product_type_key
+      - name: is_machine_failure
+        data_tests: [not_null]
+
+  - name: fct_failure_events
+    description: >
+      Failure events fact (bridge between readings and failure modes). One row per failed
+      reading x failure mode.
+    config:
+      meta: {layer: gold, model_type: fact, grain: one row per failed reading x failure mode}
+    columns:
+      - name: failure_event_key
+        data_tests: [unique, not_null]
+      - name: reading_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('fct_sensor_readings')
+                field: reading_id
+      - name: machine_key
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_machine')
+                field: machine_key
+      - name: product_type_key
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_product_type')
+                field: product_type_key
+      - name: failure_mode_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_failure_mode')
+                field: failure_mode_key
+
+  # ---------------------------------------------------------------- KPIs
+  - name: kpi_failure_rate_by_product_type
+    description: >
+      Headline KPI. Failure rate by product quality variant.
+      **failure_rate_pct = 100 x failed readings / total readings** (macro failure_rate_pct).
+    config:
+      contract: {enforced: true}
+      meta:
+        layer: gold
+        model_type: kpi
+        kpi_owner: reliability-engineering
+        kpi_definition: "failure_rate_pct = 100 * count(is_machine_failure) / count(readings)"
+    columns:
+      - name: product_type_code
+        data_type: varchar
+        constraints: [{type: not_null}]
+        data_tests: [unique]
+      - name: quality_variant
+        data_type: varchar
+      - name: readings
+        data_type: bigint
+        description: Number of readings for the product type.
+      - name: failures
+        data_type: bigint
+        description: Number of readings with machine failure.
+      - name: failure_rate_pct
+        data_type: double
+        description: 100 x failures / readings.
+        data_tests:
+          - accepted_range: {arguments: {min_value: 0, max_value: 100}}
+      - name: share_of_failures_pct
+        data_type: double
+        description: This type's share of all failures in the plant.
+      - name: share_of_readings_pct
+        data_type: double
+        description: This type's share of all readings in the plant.
+      - name: avg_tool_wear_min
+        data_type: double
+      - name: avg_torque_nm
+        data_type: double
+      - name: avg_rotational_speed_rpm
+        data_type: double
+      - name: avg_power_kw
+        data_type: double
+
+  - name: kpi_failure_mode_by_product_type
+    description: >
+      Failure events per failure mode and product type, including zero-event combinations.
+      **events_per_1000_readings = 1000 x events / readings of that type.**
+    config:
+      meta:
+        layer: gold
+        model_type: kpi
+        kpi_definition: "events_per_1000_readings = 1000 * failure_events / readings"
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: ["product_type_code", "failure_mode_code"]
+    columns:
+      - name: product_type_code
+      - name: failure_mode_code
+      - name: failure_events
+        data_tests:
+          - accepted_range: {arguments: {min_value: 0}}
+      - name: events_per_1000_readings
+      - name: share_of_type_events_pct
+
+  - name: kpi_failure_rate_by_tool_wear
+    description: Failure rate by 50-minute tool wear band.
+    config:
+      meta:
+        layer: gold
+        model_type: kpi
+        kpi_definition: "failure_rate_pct = 100 * failures / readings, per tool wear band"
+    columns:
+      - name: tool_wear_band
+        data_tests: [unique, not_null]
+      - name: failure_rate_pct
+        data_tests:
+          - accepted_range: {arguments: {min_value: 0, max_value: 100}}
+
+  - name: kpi_plant_summary
+    description: One-row plant summary - the front-page numbers of the data product.
+    config:
+      meta: {layer: gold, model_type: kpi}
+    data_tests:
+      - row_count_equals:
+          arguments:
+            expected: 1
+    columns:
+      - name: total_readings
+      - name: total_machines
+      - name: total_failures
+      - name: failure_rate_pct
+        data_tests:
+          - accepted_range: {arguments: {min_value: 0, max_value: 100}}
+      - name: top_failure_mode
+      - name: highest_risk_product_type
